@@ -212,7 +212,7 @@ function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % heroImages.length);
-    }, 10000);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
