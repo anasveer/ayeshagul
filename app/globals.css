@@ -10,17 +10,62 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-red: #DC143C;
+  --color-brand-dark: #8B0000;
+  --color-brand-light: #FF6B6B;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.hero-slide {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.hero-container {
+  perspective: 1200px;
+}
+
+.hero-page {
+  transform-origin: left center;
+  transition: all 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-page-exit {
+  transform-origin: right center;
+  animation: bookClose 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.hero-page-enter {
+  transform-origin: left center;
+  animation: bookOpen 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes bookClose {
+  0% { opacity: 1; transform: rotateY(0deg) scale(1); }
+  50% { opacity: 0.6; transform: rotateY(-15deg) scale(0.98); }
+  100% { opacity: 0; transform: rotateY(-30deg) scale(0.95); }
+}
+
+@keyframes bookOpen {
+  0% { opacity: 0; transform: rotateY(30deg) scale(0.95); }
+  50% { opacity: 0.6; transform: rotateY(15deg) scale(0.98); }
+  100% { opacity: 1; transform: rotateY(0deg) scale(1); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 20s linear infinite;
 }
