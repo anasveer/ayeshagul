@@ -7,93 +7,39 @@ const WHATSAPP_NUMBER = "+923212259591";
 const collections = [
   {
     id: 1,
-    name: "Ruby Velvet 2-Piece Suit",
-    price: 4500,
-    originalPrice: 6500,
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop",
-    category: "2 Piece",
-    description: "Elegant velvet suit with intricate embroidery work",
+    name: "Cotton 3-Piece Suit",
+    price: 7500,
+    originalPrice: 9500,
+    image: "/suit/suit-1.jpeg",
+    category: "3 Piece",
+    description: "Premium cotton 3-piece with embroidered dupatta",
   },
   {
     id: 2,
-    name: "Crimson Silk 3-Piece Suit",
-    price: 7200,
-    originalPrice: 9800,
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=500&fit=crop",
+    name: "Cotton 3-Piece Suit",
+    price: 7500,
+    originalPrice: 9500,
+    image: "/suit/suit-2.jpeg",
     category: "3 Piece",
-    description: "Premium silk suit with dupatta and trousers",
+    description: "Premium cotton 3-piece with embroidered dupatta",
   },
   {
     id: 3,
-    name: "Rose Linen Cotton Suit",
-    price: 3800,
-    originalPrice: 5200,
-    image: "https://images.unsplash.com/photo-1585487000160-d50e2216d68b?w=400&h=500&fit=crop",
-    category: "Linen Cotton",
-    description: "Breathable linen cotton perfect for summer",
+    name: "Cotton 3-Piece Suit",
+    price: 7500,
+    originalPrice: 9500,
+    image: "/suit/suit-3.jpeg",
+    category: "3 Piece",
+    description: "Premium cotton 3-piece with embroidered dupatta",
   },
   {
     id: 4,
-    name: "Burgundy Luxury Formal",
-    price: 8500,
-    originalPrice: 12000,
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&h=500&fit=crop",
-    category: "Luxury",
-    description: "Hand-crafted luxury suit with stone work",
-  },
-  {
-    id: 5,
-    name: "Scarlet Chiffon 2-Piece",
-    price: 5100,
-    originalPrice: 7000,
-    image: "https://images.unsplash.com/photo-1583846783214-7229a91b20ed?w=400&h=500&fit=crop",
-    category: "2 Piece",
-    description: "Flowing chiffon with modern print design",
-  },
-  {
-    id: 6,
-    name: "Maroon Embroidered 3-Piece",
-    price: 6900,
+    name: "Cotton 3-Piece Suit",
+    price: 7500,
     originalPrice: 9500,
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=500&fit=crop",
+    image: "/suit/suit-4.jpeg",
     category: "3 Piece",
-    description: "Full embroidery suit with organza dupatta",
-  },
-  {
-    id: 7,
-    name: "Wine Premium Cotton",
-    price: 3200,
-    originalPrice: 4800,
-    image: "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=400&h=500&fit=crop",
-    category: "Linen Cotton",
-    description: "Soft premium cotton with digital print",
-  },
-  {
-    id: 8,
-    name: "Cerise Designer Suit",
-    price: 9200,
-    originalPrice: 13500,
-    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=500&fit=crop",
-    category: "Luxury",
-    description: "Exclusive designer collection with Swarovski",
-  },
-  {
-    id: 9,
-    name: "Blush Pink 2-Piece Lawn",
-    price: 2800,
-    originalPrice: 4200,
-    image: "https://images.unsplash.com/photo-1502716119720-b23a1e3b8b17?w=400&h=500&fit=crop",
-    category: "2 Piece",
-    description: "Lightweight lawn for casual elegance",
-  },
-  {
-    id: 10,
-    name: "Cherry Blossom Luxury",
-    price: 11500,
-    originalPrice: 16000,
-    image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=400&h=500&fit=crop",
-    category: "Luxury",
-    description: "Bridal luxury suit with heavy zardozi work",
+    description: "Premium cotton 3-piece with embroidered dupatta",
   },
 ];
 
@@ -225,7 +171,7 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section id="hero" className="relative min-h-[400px] sm:min-h-[500px] md:min-h-[600px] bg-white overflow-hidden flex items-center justify-center">
+    <section id="hero" className="relative min-h-[520px] sm:min-h-[500px] md:min-h-[600px] bg-white overflow-hidden flex items-center justify-center pt-16 md:pt-20">
       {/* Top-left flower cluster */}
       <svg className="absolute -top-6 -left-6 w-48 sm:w-60 md:w-80 opacity-70" viewBox="0 0 300 300" fill="none">
         <defs>
@@ -401,12 +347,12 @@ function ProductCard({ product }: { product: (typeof collections)[0] }) {
 
   return (
     <div className="card-lift group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-gray-100 hover:border-indigo-100">
-      <div className="relative overflow-hidden aspect-[3/4]">
+      <div className="relative overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute top-3 left-3 flex gap-2">
           <span className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
@@ -711,14 +657,9 @@ function PaymentMethods() {
           <div className="flex flex-col items-center gap-2 group">
             <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white shadow-md border border-gray-100 flex items-center justify-center group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300 overflow-hidden p-3">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/7/7f/JazzCash_logo.svg"
+                src="/JazzCash_logo_(2025).png"
                 alt="JazzCash"
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  const t = e.target as HTMLImageElement;
-                  t.style.display = 'none';
-                  t.parentElement!.innerHTML = '<div style="background:#ED1C24;width:100%;height:100%;border-radius:16px;display:flex;align-items:center;justify-content:center"><span style="color:white;font-weight:800;font-size:18px">JazzCash</span></div>';
-                }}
               />
             </div>
             <span className="text-xs font-semibold text-gray-600">JazzCash</span>
@@ -728,14 +669,9 @@ function PaymentMethods() {
           <div className="flex flex-col items-center gap-2 group">
             <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white shadow-md border border-gray-100 flex items-center justify-center group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300 overflow-hidden p-3">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Easypaisa_logo.svg/512px-Easypaisa_logo.svg.png"
+                src="/easypaisa.png"
                 alt="EasyPaisa"
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  const t = e.target as HTMLImageElement;
-                  t.style.display = 'none';
-                  t.parentElement!.innerHTML = '<div style="background:#00B140;width:100%;height:100%;border-radius:16px;display:flex;align-items:center;justify-content:center"><span style="color:white;font-weight:800;font-size:15px">EasyPaisa</span></div>';
-                }}
               />
             </div>
             <span className="text-xs font-semibold text-gray-600">EasyPaisa</span>
@@ -745,14 +681,9 @@ function PaymentMethods() {
           <div className="flex flex-col items-center gap-2 group">
             <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white shadow-md border border-gray-100 flex items-center justify-center group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300 overflow-hidden p-3">
               <img
-                src="https://upload.wikimedia.org/wikipedia/en/thumb/1/1d/United_Bank_Limited_logo.svg/512px-United_Bank_Limited_logo.svg.png"
+                src="/ubl.jpg"
                 alt="UBL Bank"
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  const t = e.target as HTMLImageElement;
-                  t.style.display = 'none';
-                  t.parentElement!.innerHTML = '<div style="background:#003B71;width:100%;height:100%;border-radius:16px;display:flex;align-items:center;justify-content:center"><span style="color:white;font-weight:800;font-size:16px">UBL</span></div>';
-                }}
               />
             </div>
             <span className="text-xs font-semibold text-gray-600">UBL Bank</span>
@@ -773,7 +704,7 @@ function PaymentMethods() {
             <span className="text-xs font-semibold text-gray-600">Bank Transfer</span>
           </div>
         </div>
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs text-gray-600 mt-6">
           100% Advance Payment — Your money is safe & secure with us
         </p>
       </div>
