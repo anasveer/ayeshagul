@@ -1,126 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import type { Product } from "@/lib/products";
-import { updateProduct, deleteProduct } from "../actions";
+import { deleteProduct } from "../actions";
 
 const filters = ["All", "2 Piece", "3 Piece"] as const;
 
-const inputClass =
-  "w-full rounded-lg border border-[#e8d5c4] bg-[#fdf8f5] px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-[#2c1a0e] focus:ring-2 focus:ring-[#2c1a0e]/10";
-
-function EditControls({
-  product,
-  onDelete,
-}: {
-  product: Product;
-  onDelete: (product: Product) => void;
-}) {
-  const [name, setName] = useState(product.name);
-  const [category, setCategory] = useState(product.category);
-  const [price, setPrice] = useState(String(product.price));
-  const [originalPrice, setOriginalPrice] = useState(String(product.originalPrice));
-  const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
-
-  const scheduleSave = useCallback(
-    (next: { name: string; category: string; price: string; originalPrice: string }) => {
-      setStatus("saving");
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(async () => {
-        const fd = new FormData();
-        fd.set("id", product.id);
-        fd.set("name", next.name);
-        fd.set("category", next.category);
-        fd.set("price", next.price);
-        fd.set("originalPrice", next.originalPrice);
-        try {
-          await updateProduct(fd);
-          setStatus("saved");
-          timer.current = setTimeout(() => setStatus("idle"), 1500);
-        } catch {
-          setStatus("idle");
-        }
-      }, 700);
-    },
-    [product.id]
-  );
-
-  return (
-    <div className="flex flex-col gap-4">
-      {/* Top row: image + name */}
-      <div className="flex items-start gap-3">
-        <div className="h-20 w-16 shrink-0 overflow-hidden rounded-xl border border-[#e8d5c4] bg-[#f5ede6]">
-          {product.image ? (
-            <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-2xl">👗</div>
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <input
-            value={name}
-            onChange={(e) => { const v = e.target.value; setName(v); scheduleSave({ name: v, category, price, originalPrice }); }}
-            className={inputClass}
-            placeholder="Product name"
-          />
-          <div className="mt-1.5 h-4">
-            {status === "saving" && <span className="text-xs font-medium text-amber-500">Saving…</span>}
-            {status === "saved" && <span className="text-xs font-medium text-emerald-600">✓ Saved</span>}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom row: fields + delete */}
-      <div className="flex flex-wrap gap-2 items-center">
-        <select
-          value={category}
-          onChange={(e) => { const v = e.target.value; setCategory(v); scheduleSave({ name, category: v, price, originalPrice }); }}
-          className="rounded-lg border border-[#e8d5c4] bg-[#fdf8f5] px-3 py-2 text-sm outline-none focus:border-[#2c1a0e] focus:ring-2 focus:ring-[#2c1a0e]/10"
-        >
-          <option value="2 Piece">2 Piece</option>
-          <option value="3 Piece">3 Piece</option>
-        </select>
-        <input
-          value={price}
-          type="number"
-          min="0"
-          onChange={(e) => { const v = e.target.value; setPrice(v); scheduleSave({ name, category, price: v, originalPrice }); }}
-          className="w-28 rounded-lg border border-[#e8d5c4] bg-[#fdf8f5] px-3 py-2 text-sm outline-none focus:border-[#2c1a0e] focus:ring-2 focus:ring-[#2c1a0e]/10"
-          placeholder="Price"
-        />
-        <input
-          value={originalPrice}
-          type="number"
-          min="0"
-          onChange={(e) => { const v = e.target.value; setOriginalPrice(v); scheduleSave({ name, category, price, originalPrice: v }); }}
-          className="w-28 rounded-lg border border-[#e8d5c4] bg-[#fdf8f5] px-3 py-2 text-sm outline-none focus:border-[#2c1a0e] focus:ring-2 focus:ring-[#2c1a0e]/10"
-          placeholder="Orig. Price"
-        />
-        <button
-          onClick={() => onDelete(product)}
-          className="ml-auto rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100 active:scale-95"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  );
-}
-
 export default function InventoryTable({ products }: { products: Product[] }) {
   const [list, setList] = useState(products);
-  const [prevProducts, setPrevProducts] = useState(products);
   const [filter, setFilter] = useState<(typeof filters)[number]>("All");
+  const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
-
-  if (prevProducts !== products) {
-    setPrevProducts(products);
-    setList(products);
-  }
 
   const filtered = filter === "All" ? list : list.filter((p) => p.category === filter);
 
@@ -140,36 +32,131 @@ export default function InventoryTable({ products }: { products: Product[] }) {
 
   return (
     <div className="space-y-4">
-      {/* Filter pills */}
-      <div className="flex flex-wrap gap-2">
+      {/* Filter + count */}
+      <div className="flex flex-wrap items-center gap-2">
         {filters.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition active:scale-95 ${
+            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition active:scale-95 ${
               filter === f
-                ? "bg-[#2c1a0e] text-white shadow-sm"
+                ? "bg-[#2c1a0e] text-white"
                 : "bg-white text-[#2c1a0e] border border-[#e8d5c4] hover:bg-[#f5ede6]"
             }`}
           >
             {f}
           </button>
         ))}
-        <span className="ml-auto self-center text-sm text-gray-400">{filtered.length} product(s)</span>
+        <span className="ml-auto text-sm text-gray-600">{filtered.length} product(s)</span>
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-[#e8d5c4] bg-white p-12 text-center text-gray-400">
-          <div className="text-4xl mb-3">📦</div>
-          <p className="text-sm">No products found.</p>
-        </div>
-      ) : (
-        <div className="grid gap-3 md:grid-cols-2">
-          {filtered.map((product) => (
-            <div key={product.id} className="rounded-2xl border border-[#e8d5c4] bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
-              <EditControls product={product} onDelete={setDeleteTarget} />
-            </div>
-          ))}
+      {/* Table */}
+      <div className="rounded-2xl border border-[#e8d5c4] bg-white overflow-hidden shadow-sm">
+        {filtered.length === 0 ? (
+          <div className="py-16 text-center text-gray-600">
+            <div className="text-4xl mb-3">📦</div>
+            <p className="text-sm">No products found.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[#f5ede6] border-b border-[#e8d5c4]">
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e] w-14">#</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e] w-16">Image</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e]">Product Name</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e]">Category</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e]">Sale Price</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e]">Orig. Price</th>
+                  <th className="text-left px-4 py-3 font-semibold text-[#2c1a0e]">Discount</th>
+                  <th className="text-center px-4 py-3 font-semibold text-[#2c1a0e]">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#f5ede6]">
+                {filtered.map((product, idx) => {
+                  const discount =
+                    product.originalPrice > product.price
+                      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                      : 0;
+                  return (
+                    <tr key={product.id} className="hover:bg-[#fdf8f5] transition-colors">
+                      <td className="px-4 py-3 text-gray-600">{idx + 1}</td>
+                      <td className="px-4 py-3">
+                        <button
+                          onClick={() => setPreviewImg(product.image || null)}
+                          className="block w-10 h-10 rounded-lg overflow-hidden border border-[#e8d5c4] bg-[#f5ede6] hover:scale-110 transition-transform"
+                          title="Click to preview"
+                        >
+                          {product.image ? (
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="flex h-full items-center justify-center text-lg">👗</span>
+                          )}
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 font-medium text-[#2c1a0e] max-w-[180px] truncate">{product.name}</td>
+                      <td className="px-4 py-3">
+                        <span className="rounded-full bg-[#f5ede6] px-2.5 py-1 text-xs font-semibold text-[#5c3317]">
+                          {product.category}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-[#2c1a0e]">
+                        Rs. {product.price.toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 text-gray-600">
+                        {product.originalPrice > product.price
+                          ? `Rs. ${product.originalPrice.toLocaleString()}`
+                          : "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        {discount > 0 ? (
+                          <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                            -{discount}%
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            href={`/super-admin/inventory/${product.id}`}
+                            className="rounded-lg bg-[#2c1a0e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#5c3317] transition-colors"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => setDeleteTarget(product)}
+                            className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Image Preview Modal */}
+      {previewImg && (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 px-4"
+          onClick={() => setPreviewImg(null)}
+        >
+          <div className="relative max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+            <img src={previewImg} alt="Preview" className="w-full rounded-2xl shadow-2xl object-contain max-h-[80vh]" />
+            <button
+              onClick={() => setPreviewImg(null)}
+              className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-100"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
 
@@ -185,21 +172,21 @@ export default function InventoryTable({ products }: { products: Product[] }) {
               </div>
               <h3 className="text-lg font-bold text-gray-900">Delete Product?</h3>
             </div>
-            <p className="text-sm text-gray-500 mb-5">
+            <p className="text-sm text-gray-600 mb-5">
               &quot;{deleteTarget.name}&quot; will be permanently deleted. This cannot be undone.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className="flex-1 rounded-xl border border-[#e8d5c4] px-4 py-2.5 text-sm font-semibold text-gray-600 transition hover:bg-[#f5ede6] disabled:opacity-60"
+                className="flex-1 rounded-xl border border-[#e8d5c4] px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-[#f5ede6] disabled:opacity-60"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700 disabled:opacity-60"
+                className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
               >
                 {deleting ? "Deleting..." : "Delete"}
               </button>

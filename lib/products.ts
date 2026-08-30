@@ -6,7 +6,6 @@ export type Product = {
   price: number;
   originalPrice: number;
   category: string;
-  description: string;
   image: string;
   createdAt: Date;
 };
@@ -25,7 +24,6 @@ export async function getProducts(): Promise<Product[]> {
     price: Number(doc.price) || 0,
     originalPrice: Number(doc.originalPrice) || Number(doc.price) || 0,
     category: doc.category ?? "",
-    description: doc.description ?? "",
     image: doc.imageUrl ?? "",
     createdAt: doc.createdAt ?? new Date(0),
   }));

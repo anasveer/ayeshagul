@@ -25,10 +25,11 @@ type Order = {
 };
 
 const inputClass =
-  "w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200";
+  "w-full rounded-xl border border-[#e8d5c4] bg-[#fdf8f5] px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#a0522d] focus:ring-2 focus:ring-[#a0522d]/20";
 
 export default function MyOrders() {
   const [phone, setPhone] = useState("");
+  const [orderId, setOrderId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [orders, setOrders] = useState<Order[] | null>(null);
@@ -39,9 +40,13 @@ export default function MyOrders() {
     setLoading(true);
     setOrders(null);
     try {
-      const res = await fetch(
-        `/api/orders?phone=${encodeURIComponent(phone.trim())}`
-      );
+      const params = new URLSearchParams();
+      if (orderId.trim()) {
+        params.set("orderId", orderId.trim());
+      } else if (phone.trim()) {
+        params.set("phone", phone.trim());
+      }
+      const res = await fetch(`/api/orders?${params.toString()}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to load orders.");
       setOrders(json.orders);
@@ -55,31 +60,41 @@ export default function MyOrders() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 py-10">
+    <main className="min-h-screen bg-[#f5ede6] py-10">
       <div className="mx-auto max-w-3xl px-4">
-        <header className="mb-8 text-center">
+        <header className="mb-12 mt-4 text-center">
           <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
-          <p className="mx-auto mt-2 max-w-md text-sm text-gray-500">
-            Enter the phone number you used at checkout to see your order
+          <p className="mx-auto mt-4 max-w-md text-sm text-emerald-600">
+            Enter your phone number or Order ID to see your order
             status and details.
           </p>
         </header>
 
-        <form onSubmit={handleSubmit} className="mb-8 flex gap-2">
-          <input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-            placeholder="03xx xxxxxxx"
-            className={inputClass}
-          />
+        <form onSubmit={handleSubmit} className="mb-8 space-y-3">
+          <div className="flex gap-2">
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
+              className={inputClass}
+            />
+            <input
+              value={orderId}
+              onChange={(e) => setOrderId(e.target.value)}
+              placeholder="Order ID"
+              className={inputClass}
+            />
+          </div>
           <button
             type="submit"
-            disabled={loading}
-            className="shrink-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:from-blue-600 hover:to-cyan-600 disabled:opacity-60"
+            disabled={loading || (!phone.trim() && !orderId.trim())}
+            className="w-full rounded-[10px] px-6 py-3 text-sm font-bold text-white overflow-hidden relative add-to-cart-btn disabled:opacity-60"
           >
             {loading ? "Loading..." : "Check Orders"}
           </button>
+          <p className="text-xs text-gray-600 text-center">
+            Order ID will show one specific order. Phone number will show all orders for that number.
+          </p>
         </form>
 
         {error ? (
@@ -90,7 +105,7 @@ export default function MyOrders() {
 
         {orders && orders.length === 0 ? (
           <p className="py-10 text-center text-gray-400">
-            No orders found for this number.
+            No orders found. Please check your phone number or Order ID.
           </p>
         ) : null}
 
@@ -99,9 +114,9 @@ export default function MyOrders() {
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
+                className="rounded-2xl border border-[#e8d5c4] bg-white p-5 shadow-sm"
               >
-                <div className="flex flex-wrap items-start justify-between gap-2 border-b border-gray-50 pb-3">
+                <div className="flex flex-wrap items-start justify-between gap-2 border-b border-[#f5ede6] pb-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-semibold text-gray-900">
@@ -129,7 +144,7 @@ export default function MyOrders() {
                 <ul className="mt-3 space-y-3">
                   {order.items.map((item, idx) => (
                     <li key={idx} className="flex gap-3">
-                      <div className="h-16 w-14 shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
+                      <div className="h-16 w-14 shrink-0 overflow-hidden rounded-lg border border-[#e8d5c4] bg-[#f5ede6]">
                         {item.image ? (
                           <img
                             src={item.image}
@@ -137,7 +152,7 @@ export default function MyOrders() {
                             className="h-full w-full object-cover"
                           />
                         ) : (
-                          <div className="flex h-full items-center justify-center text-blue-200">
+                          <div className="flex h-full items-center justify-center text-[#a0522d]">
                             A
                           </div>
                         )}
@@ -160,7 +175,7 @@ export default function MyOrders() {
                   ))}
                 </ul>
 
-                <p className="mt-4 border-t border-gray-50 pt-3 text-xs text-gray-500">
+                <p className="mt-4 border-t border-[#f5ede6] pt-3 text-xs text-gray-500">
                   {order.address}
                   {order.city ? `, ${order.city}` : ""}
                 </p>
@@ -170,7 +185,7 @@ export default function MyOrders() {
         ) : null}
 
         <p className="mt-10 text-center">
-          <Link href="/" className="text-sm font-medium text-blue-600 hover:text-blue-700">
+          <Link href="/" className="text-sm font-medium text-[#a0522d] hover:text-[#2c1a0e]">
             ← Back to shop
           </Link>
         </p>

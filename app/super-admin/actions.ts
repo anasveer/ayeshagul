@@ -18,7 +18,7 @@ async function requireAdmin(): Promise<string> {
   return session;
 }
 
-export type AddProductState = { error?: string };
+export type AddProductState = { error?: string; success?: boolean };
 
 export async function addProduct(
   _prev: AddProductState,
@@ -31,7 +31,6 @@ export async function addProduct(
   const price = Number(formData.get("price") ?? 0);
   const originalPriceRaw = formData.get("originalPrice");
   const originalPrice = originalPriceRaw ? Number(originalPriceRaw) : price;
-  const description = String(formData.get("description") ?? "").trim();
   const image = formData.get("image");
 
   if (!name || !category || !price) {
@@ -55,27 +54,33 @@ export async function addProduct(
     category,
     price,
     originalPrice,
-    description,
     imageUrl,
     createdAt: new Date(),
   });
 
   revalidatePath("/");
   revalidatePath("/super-admin/inventory");
-  redirect("/super-admin/inventory");
+  return { success: true };
 }
 
-export async function updateProduct(formData: FormData): Promise<void> {
+export type UpdateProductState = { error?: string };
+
+export async function updateProduct(
+  _prev: UpdateProductState,
+  formData: FormData
+): Promise<UpdateProductState> {
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "");
-  if (!id || !ObjectId.isValid(id)) return;
+  if (!id || !ObjectId.isValid(id)) return { error: "Invalid product ID." };
 
   const name = String(formData.get("name") ?? "").trim();
   const category = String(formData.get("category") ?? "").trim();
   const price = Number(formData.get("price") ?? 0);
   const originalPriceRaw = formData.get("originalPrice");
   const originalPrice = originalPriceRaw ? Number(originalPriceRaw) : price;
+
+  if (!name || !category || !price) return { error: "All fields are required." };
 
   const db = await getDb();
   await db.collection("products").updateOne(
@@ -85,6 +90,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
 
   revalidatePath("/");
   revalidatePath("/super-admin/inventory");
+  redirect("/super-admin/inventory");
 }
 
 export async function deleteProduct(formData: FormData): Promise<void> {

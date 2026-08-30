@@ -19,12 +19,14 @@ export default async function OrdersPage() {
       price?: number;
       quantity?: number;
       category?: string;
+      image?: string;
     }>;
 
     return {
       id: doc._id.toString(),
       customerName: doc.customerName ?? "",
       phone: doc.phone ?? "",
+      email: doc.email ?? "",
       address: doc.address ?? "",
       city: doc.city ?? "",
       items: rawItems.map((item) => ({
@@ -32,9 +34,11 @@ export default async function OrdersPage() {
         price: Number(item.price) || 0,
         quantity: Number(item.quantity) || 1,
         category: item.category ?? "",
+        image: item.image ?? "",
       })),
       totalAmount: Number(doc.totalAmount) || 0,
       status: (doc.status === "complete" ? "complete" : "pending") as "pending" | "complete",
+      paymentScreenshotUrl: doc.paymentScreenshotUrl ?? "",
       createdAt: doc.createdAt ? new Date(doc.createdAt).toLocaleString() : "",
     };
   });

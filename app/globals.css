@@ -58,18 +58,33 @@ body {
 
 /* ── Button brand (brown) ── */
 .btn-brand {
-  background: var(--brown-dark);
+  background: linear-gradient(135deg, #2c1a0e 0%, #5c3317 50%, #2c1a0e 100%);
+  background-size: 200% 100%;
   color: white;
-  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(44,26,14,0.35), 0 0 0 0 rgba(92,51,23,0);
+  transition: box-shadow 0.3s ease;
+}
+
+.btn-brand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: waterFlow 2s ease-in-out infinite;
+  border-radius: inherit;
 }
 
 .btn-brand:hover {
-  background: var(--brown-mid);
-  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(44,26,14,0.5), 0 0 12px rgba(160,82,45,0.4);
 }
 
 .btn-brand:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
 /* ── Card lift ── */
@@ -90,7 +105,72 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── Mobile bottom nav safe area ── */
+/* ── Cart badge bounce animation ── */
+@keyframes badgeBounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+  60% { transform: translateY(-2px); }
+}
+
+.cart-badge {
+  animation: badgeBounce 2s ease-in-out infinite;
+}
+
+/* ── Add to Cart water-flow button ── */
+@keyframes waterFlow {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(135deg, #2c1a0e 0%, #5c3317 50%, #2c1a0e 100%);
+  background-size: 200% 100%;
+  box-shadow: 0 2px 8px rgba(44,26,14,0.35), 0 0 0 0 rgba(92,51,23,0);
+  transition: box-shadow 0.3s ease;
+}
+
+.add-to-cart-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: waterFlow 2s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.96);
+}
+
+.add-to-cart-btn:hover {
+  box-shadow: 0 4px 16px rgba(44,26,14,0.5), 0 0 12px rgba(160,82,45,0.4);
+}
 .bottom-nav-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── YouTube Channel Card Glow ── */
+.yt-card {
+  perspective: 800px;
+}
+
+.yt-card:hover {
+  transform: translateY(-8px) rotateX(2deg);
+}
+
+.yt-icon {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.yt-card:hover .yt-icon {
+  box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 80px rgba(239, 68, 68, 0.3);
+  animation: ytPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes ytPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.7), 0 0 60px rgba(239, 68, 68, 0.3); }
 }

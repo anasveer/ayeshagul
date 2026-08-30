@@ -1,22 +1,36 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const phone = url.searchParams.get("phone")?.trim() ?? "";
+    const orderId = url.searchParams.get("orderId")?.trim() ?? "";
 
-    if (!phone) {
-      return NextResponse.json({ error: "Phone is required" }, { status: 400 });
+    if (!phone && !orderId) {
+      return NextResponse.json({ error: "Phone or Order ID is required" }, { status: 400 });
     }
 
     const db = await getDb();
-    const docs = await db
-      .collection("orders")
-      .find({ phone })
-      .sort({ createdAt: -1 })
-      .limit(30)
-      .toArray();
+
+    let docs;
+    if (orderId) {
+      if (!ObjectId.isValid(orderId)) {
+        return NextResponse.json({ orders: [] });
+      }
+      docs = await db
+        .collection("orders")
+        .find({ _id: new ObjectId(orderId) })
+        .toArray();
+    } else {
+      docs = await db
+        .collection("orders")
+        .find({ phone })
+        .sort({ createdAt: -1 })
+        .limit(30)
+        .toArray();
+    }
 
     const orders = docs.map((doc) => {
       const rawItems = (doc.items ?? []) as Array<{

@@ -33,7 +33,7 @@ export default async function LoginPage() {
 
           {/* Form area */}
           <div className="px-8 py-8">
-            <p className="text-sm text-gray-500 mb-6 text-center">
+            <p className="text-sm text-gray-600 mb-6 text-center">
               Sign in to manage your store
             </p>
             <LoginForm />

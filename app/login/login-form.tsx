@@ -43,7 +43,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <label className="flex items-center gap-2.5 text-sm text-gray-600 select-none cursor-pointer">
+      <label className="flex items-center gap-2.5 text-sm text-gray-700 select-none cursor-pointer">
         <input
           type="checkbox"
           name="remember"

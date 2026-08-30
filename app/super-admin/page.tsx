@@ -115,13 +115,13 @@ export default async function DashboardPage() {
         {cards.map((card) => (
           <div key={card.label} className={`rounded-2xl border p-5 ${card.bg}`}>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-gray-500">{card.label}</span>
+              <span className="text-sm font-medium text-gray-600">{card.label}</span>
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg} text-white`}>
                 {card.icon}
               </div>
             </div>
             <p className={`text-3xl font-bold ${card.valueColor}`}>{card.value}</p>
-            <p className="mt-1 text-xs text-gray-400">{card.sub}</p>
+            <p className="mt-1 text-xs text-gray-600">{card.sub}</p>
           </div>
         ))}
       </div>
@@ -172,7 +172,7 @@ export default async function DashboardPage() {
               <svg className="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              <p className="text-sm">No pending orders</p>
+              <p className="text-sm text-gray-600">No pending orders</p>
             </div>
           ) : (
             <ul className="space-y-3">
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
                 >
                   <div>
                     <p className="text-sm font-semibold text-[#2c1a0e]">{order.customerName}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="text-xs text-gray-600 mt-0.5">
                       {order.items?.length ?? 0} item(s) · {order.phone}
                     </p>
                   </div>

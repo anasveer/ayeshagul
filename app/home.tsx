@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import type { Product } from "@/lib/products";
 import { useCart } from "./cart-context";
 
-const WHATSAPP_NUMBER = "+923212259591";
-
 function useScrollReveal() {
   const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -73,13 +71,6 @@ function IconClose() {
     </svg>
   );
 }
-function IconHeart({ filled = false }: { filled?: boolean }) {
-  return (
-    <svg className="w-5 h-5" fill={filled ? "#2c1a0e" : "none"} stroke="#2c1a0e" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-  );
-}
 
 /* ── Desktop Navbar ── */
 function DesktopNavbar() {
@@ -99,9 +90,7 @@ function DesktopNavbar() {
         <div className="flex items-center justify-between h-18 py-4">
           {/* Logo */}
           <a href="#hero" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-[#2c1a0e] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">A</span>
-            </div>
+            <img src="/profile.jpeg" alt="Ayesha Gul" className="w-10 h-10 rounded-xl object-cover" />
             <span className="text-xl font-bold text-[#2c1a0e]">Ayesha Gul</span>
           </a>
 
@@ -119,27 +108,21 @@ function DesktopNavbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER.replace("+", "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-brand px-5 py-2 rounded-full text-sm font-semibold"
-            >
-              Order Now
-            </a>
             <button
               onClick={openCart}
               className="relative p-2 rounded-full hover:bg-[#f5ede6] transition-colors text-[#2c1a0e]"
               aria-label="Cart"
             >
-              <IconCart />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
               {count > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#2c1a0e] text-[11px] font-bold text-white">
+                <span className="cart-badge absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#2c1a0e] text-[11px] font-bold text-white shadow-md">
                   {count}
                 </span>
               )}
             </button>
-            {/* Mobile menu toggle for tablet */}
+            {/* tablet menu toggle */}
             <button onClick={() => setOpen(!open)} className="lg:hidden p-2 rounded-full hover:bg-[#f5ede6] text-[#2c1a0e]">
               {open ? <IconClose /> : <IconMenu />}
             </button>
@@ -171,11 +154,16 @@ function MobileTopBar() {
           <button onClick={() => setMenuOpen(!menuOpen)} className="p-1.5 text-[#2c1a0e]">
             <IconMenu />
           </button>
-          <a href="#hero" className="text-lg font-bold text-[#2c1a0e]">Ayesha Gul</a>
+          <a href="#hero" className="flex items-center gap-2">
+            <img src="/profile.jpeg" alt="Ayesha Gul" className="w-8 h-8 rounded-lg object-cover" />
+            <span className="text-base font-bold text-[#2c1a0e]">Ayesha Gul</span>
+          </a>
           <button onClick={openCart} className="relative p-1.5 text-[#2c1a0e]" aria-label="Cart">
-            <IconCart />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
             {count > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#2c1a0e] text-[10px] font-bold text-white">
+              <span className="cart-badge absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2c1a0e] text-[10px] font-bold text-white shadow-md">
                 {count}
               </span>
             )}
@@ -204,14 +192,6 @@ function MobileTopBar() {
                   {l.label}
                 </a>
               ))}
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER.replace("+", "")}`}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="block mt-3 text-center bg-[#2c1a0e] text-white py-3 rounded-xl font-semibold"
-              >
-                Order on WhatsApp
-              </a>
             </div>
           </div>
         </div>
@@ -267,13 +247,6 @@ function Hero() {
               <a href="#collections" className="btn-brand px-8 py-3.5 rounded-full font-bold text-base">
                 Explore Collection
               </a>
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER.replace("+", "")}?text=Hi! I'm interested in your collections.`}
-                target="_blank" rel="noopener noreferrer"
-                className="px-8 py-3.5 rounded-full font-bold text-base border-2 border-[#2c1a0e] text-[#2c1a0e] hover:bg-[#2c1a0e] hover:text-white transition-all"
-              >
-                Order on WhatsApp
-              </a>
             </div>
           </div>
           <div className="flex-1 flex justify-center">
@@ -306,11 +279,7 @@ function CategoriesBar({
   activeCategory: string;
   setActiveCategory: (c: string) => void;
 }) {
-  const cats = [
-    { label: "All", icon: "✨" },
-    { label: "2 Piece", icon: "👘" },
-    { label: "3 Piece", icon: "👗" },
-  ];
+  const cats = ["All", "2 Piece", "3 Piece"];
 
   return (
     <div className="px-4 md:px-0 mt-5 mb-2">
@@ -322,16 +291,15 @@ function CategoriesBar({
       <div className="flex gap-2 md:gap-3 overflow-x-auto no-scrollbar">
         {cats.map((cat) => (
           <button
-            key={cat.label}
-            onClick={() => setActiveCategory(cat.label)}
-            className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95 ${
-              activeCategory === cat.label
-                ? "bg-[#2c1a0e] text-white shadow-md"
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95 relative overflow-hidden ${
+              activeCategory === cat
+                ? "text-white shadow-md add-to-cart-btn"
                 : "bg-[#f5ede6] text-[#2c1a0e] hover:bg-[#e8d5c4]"
             }`}
           >
-            <span className="text-base">{cat.icon}</span>
-            <span>{cat.label}</span>
+            <span className="relative z-10">{cat}</span>
           </button>
         ))}
       </div>
@@ -342,7 +310,6 @@ function CategoriesBar({
 /* ── Product Card ── */
 function ProductCard({ product }: { product: Product }) {
   const { addItem, openCart } = useCart();
-  const [wished, setWished] = useState(false);
   const discount =
     product.originalPrice > product.price
       ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -360,7 +327,8 @@ function ProductCard({ product }: { product: Product }) {
   }, [addItem, openCart, product]);
 
   return (
-    <div className="card-lift bg-white rounded-2xl overflow-hidden border border-[#e8d5c4] group">
+    <div className="card-lift bg-white rounded-[10px] overflow-hidden border border-[#e8d5c4] group flex flex-col">
+      {/* Image */}
       <div className="relative aspect-square bg-[#f5ede6] overflow-hidden">
         {product.image ? (
           <img
@@ -373,47 +341,45 @@ function ProductCard({ product }: { product: Product }) {
           <div className="w-full h-full flex items-center justify-center text-5xl">👗</div>
         )}
         {discount > 0 && (
-          <span className="absolute top-2.5 left-2.5 bg-[#2c1a0e] text-white text-[11px] font-bold px-2.5 py-1 rounded-full">
+          <span className="absolute top-2 left-2 bg-[#2c1a0e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
             -{discount}%
           </span>
         )}
-        <button
-          onClick={() => setWished(!wished)}
-          className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm active:scale-90 transition-transform"
-          aria-label="Wishlist"
-        >
-          <IconHeart filled={wished} />
-        </button>
         {/* Desktop hover overlay */}
-        <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center pb-5">
+        <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-end justify-center pb-4">
           <button
             onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
-            className="btn-brand px-6 py-2.5 rounded-full font-bold text-sm"
+            className="btn-brand px-5 py-2 rounded-[10px] font-bold text-sm"
           >
             Add to Cart
           </button>
         </div>
       </div>
-      <div className="p-2.5 md:p-3">
-        <span className="text-[10px] font-600 text-[#a0522d] uppercase tracking-wider">{product.category}</span>
+
+      {/* Info */}
+      <div className="p-2.5 md:p-3 flex flex-col flex-1">
+        <span className="text-[10px] font-semibold text-[#a0522d] uppercase tracking-wider">{product.category}</span>
         <h3 className="font-semibold text-[#2c1a0e] text-xs md:text-sm mt-0.5 line-clamp-1">{product.name}</h3>
-        <div className="flex items-center justify-between mt-1.5">
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-[#2c1a0e]">Rs. {product.price.toLocaleString()}</span>
-            {discount > 0 && (
-              <span className="text-[10px] text-gray-400 line-through">Rs. {product.originalPrice.toLocaleString()}</span>
-            )}
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
-            className="md:hidden w-7 h-7 rounded-full bg-[#2c1a0e] flex items-center justify-center text-white active:scale-90 transition-transform"
-            aria-label="Add to cart"
-          >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+        <div className="flex flex-col mt-1">
+          <span className="text-sm font-bold text-[#2c1a0e]">Rs. {product.price.toLocaleString()}</span>
+          {discount > 0 && (
+            <span className="text-[10px] text-gray-600 line-through">Rs. {product.originalPrice.toLocaleString()}</span>
+          )}
         </div>
+
+        {/* Mobile Add to Cart — water flow gradient animation */}
+        <button
+          onClick={(e) => { e.stopPropagation(); handleAddToCart(); }}
+          className="md:hidden mt-2.5 w-full py-2 rounded-[10px] text-xs font-bold text-white overflow-hidden relative add-to-cart-btn"
+          aria-label="Add to cart"
+        >
+          <span className="relative z-10 flex items-center justify-center gap-1.5">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+            </svg>
+            Add to Cart
+          </span>
+        </button>
       </div>
     </div>
   );
@@ -449,13 +415,13 @@ function Collections({ products, activeCategory, setActiveCategory }: {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all relative overflow-hidden ${
                   activeCategory === cat
-                    ? "bg-[#2c1a0e] text-white"
+                    ? "text-white add-to-cart-btn"
                     : "bg-[#f5ede6] text-[#2c1a0e] hover:bg-[#e8d5c4]"
                 }`}
               >
-                {cat}
+                <span className="relative z-10">{cat}</span>
               </button>
             ))}
           </div>
@@ -471,7 +437,7 @@ function Collections({ products, activeCategory, setActiveCategory }: {
         </div>
 
         {filtered.length === 0 ? (
-          <div className="reveal text-center py-20 text-gray-400">No products available yet.</div>
+          <div className="reveal text-center py-20 text-gray-600">No products available yet.</div>
         ) : (
           <div className="reveal-stagger grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
             {filtered.map((product) => (
@@ -484,18 +450,126 @@ function Collections({ products, activeCategory, setActiveCategory }: {
   );
 }
 
+/* ── YouTube Channels ── */
+function YouTubeChannels() {
+  const sectionRef = useScrollReveal();
+  const channels = [
+    {
+      name: "Ayesha Gul",
+      desc: "Fashion, Lifestyle & More",
+      link: "#",
+      color: "from-red-500 to-red-700",
+      glow: "shadow-red-500/40",
+    },
+    {
+      name: "All In One",
+      desc: "Everything You Need",
+      link: "#",
+      color: "from-orange-500 to-red-600",
+      glow: "shadow-orange-500/40",
+    },
+    {
+      name: "Shopping Kar Lo",
+      desc: "Best Deals & Collections",
+      link: "#",
+      color: "from-red-600 to-rose-700",
+      glow: "shadow-rose-500/40",
+    },
+  ];
+
+  return (
+    <section className="py-14 md:py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8" ref={sectionRef}>
+        <div className="reveal text-center mb-10">
+          <span className="text-xs font-bold uppercase tracking-widest text-red-600">Subscribe Now</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2c1a0e] mt-2">
+            Our <span className="text-red-600">YouTube</span> Channels
+          </h2>
+          <p className="text-gray-500 text-sm mt-2 max-w-md mx-auto">Join our community for latest updates, deals & content</p>
+        </div>
+        <div className="reveal-stagger grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {channels.map((ch, i) => (
+            <a
+              key={i}
+              href={ch.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group relative bg-white rounded-2xl p-6 text-center border border-[#e8d5c4] hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 yt-card`}
+            >
+              <div className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${ch.color} flex items-center justify-center yt-icon group-hover:scale-110 transition-transform duration-500 ${ch.glow}`}>
+                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#2c1a0e] text-lg mb-1">{ch.name}</h3>
+              <p className="text-gray-500 text-sm mb-4">{ch.desc}</p>
+              <span className={`inline-block px-5 py-2 rounded-full bg-gradient-to-r ${ch.color} text-white text-sm font-bold shadow-lg group-hover:scale-105 transition-transform`}>
+                Subscribe
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── About ── */
 function About() {
   const sectionRef = useScrollReveal();
   const features = [
-    { icon: "🧵", title: "Premium Fabric", desc: "Finest quality fabrics from trusted mills" },
-    { icon: "✂️", title: "Expert Tailoring", desc: "Precision stitching by skilled artisans" },
-    { icon: "🚚", title: "Fast Delivery", desc: "Free delivery across Pakistan above Rs. 5000" },
-    { icon: "💯", title: "Quality Promise", desc: "100% satisfaction with easy returns" },
+    {
+      title: "100% Original Brands",
+      desc: "Authentic branded suits directly from official stores",
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      ),
+      gradient: "from-emerald-500 to-teal-600",
+      iconBg: "bg-emerald-100",
+      iconColor: "text-emerald-600",
+    },
+    {
+      title: "Custom Stitching",
+      desc: "We stitch unstitched suits as per your size & style",
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+      ),
+      gradient: "from-purple-500 to-indigo-600",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
+    },
+    {
+      title: "Fast Delivery",
+      desc: "Fast delivery across Pakistan",
+      icon: (
+        <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+        </svg>
+      ),
+      gradient: "from-orange-500 to-red-500",
+      iconBg: "bg-orange-100",
+      iconColor: "text-orange-600",
+    },
+    {
+      title: "YouTube Channel",
+      desc: "Watch our latest collection videos on Ayesha Gul",
+      icon: (
+        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      ),
+      gradient: "from-red-500 to-rose-600",
+      iconBg: "bg-red-100",
+      iconColor: "text-red-600",
+    },
   ];
 
   return (
-    <section id="about" className="py-14 md:py-20 bg-[#f5ede6]">
+    <section id="about" className="py-14 md:py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8" ref={sectionRef}>
         <div className="reveal text-center mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-[#a0522d]">Why Choose Us</span>
@@ -505,10 +579,12 @@ function About() {
         </div>
         <div className="reveal-stagger grid grid-cols-2 md:grid-cols-4 gap-4">
           {features.map((f, i) => (
-            <div key={i} className="bg-white rounded-2xl p-5 md:p-7 text-center border border-[#e8d5c4] hover:shadow-lg transition-shadow">
-              <div className="text-4xl mb-3">{f.icon}</div>
+            <div key={i} className="bg-white rounded-2xl p-5 md:p-7 text-center border border-[#e8d5c4] hover:shadow-lg transition-shadow group">
+              <div className={`w-14 h-14 mx-auto mb-4 rounded-2xl ${f.iconBg} ${f.iconColor} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                {f.icon}
+              </div>
               <h3 className="font-bold text-[#2c1a0e] mb-1 text-sm md:text-base">{f.title}</h3>
-              <p className="text-gray-500 text-xs md:text-sm">{f.desc}</p>
+              <p className="text-gray-600 text-xs md:text-sm">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -521,31 +597,18 @@ function About() {
 function Contact() {
   const sectionRef = useScrollReveal();
   return (
-    <section id="contact" className="py-14 md:py-20 bg-[#2c1a0e]">
+    <section id="contact" className="py-14 md:py-20 bg-[#2c1a0e]" style={{ borderRadius: "40px", margin: "0 16px 16px" }}>
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center" ref={sectionRef}>
         <div className="reveal mb-8">
           <span className="text-xs font-bold uppercase tracking-widest text-[#d4b896]">Get in Touch</span>
           <h2 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-3">Contact Us</h2>
           <p className="text-white/60 text-sm md:text-base max-w-md mx-auto">
-            Have questions? Reach out on WhatsApp for instant support.
+            Have questions? Contact us for instant support.
           </p>
         </div>
         <div className="reveal flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
-          <a
-            href={`https://wa.me/${WHATSAPP_NUMBER.replace("+", "")}?text=Hi! I have a question about your clothing.`}
-            target="_blank" rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-7 py-3.5 rounded-2xl font-bold transition-colors"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            WhatsApp Us
-          </a>
-          <div className="flex items-center justify-center gap-2 border border-white/20 text-white px-7 py-3.5 rounded-2xl font-semibold">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            +92 321 2259591
+          <div className="btn-brand flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl font-bold">
+            Contact Us
           </div>
         </div>
       </div>
@@ -556,7 +619,7 @@ function Contact() {
 /* ── Payment Methods ── */
 function PaymentMethods() {
   return (
-    <section className="py-10 md:py-14 bg-white border-t border-[#e8d5c4]">
+    <section className="py-10 md:py-14 bg-[#f5ede6] border-t border-[#e8d5c4]">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
         <span className="text-xs font-bold uppercase tracking-widest text-[#a0522d] mb-2 block">Secure Payments</span>
         <h3 className="text-xl font-bold text-[#2c1a0e] mb-7">We Accept</h3>
@@ -570,17 +633,17 @@ function PaymentMethods() {
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-white shadow border border-[#e8d5c4] flex items-center justify-center p-2 hover:-translate-y-1 transition-transform">
                 <img src={p.src} alt={p.label} className="w-full h-full object-contain" />
               </div>
-              <span className="text-xs font-semibold text-gray-600">{p.label}</span>
+              <span className="text-xs font-semibold text-gray-700">{p.label}</span>
             </div>
           ))}
           <div className="flex flex-col items-center gap-2">
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[#2c1a0e] flex items-center justify-center hover:-translate-y-1 transition-transform">
               <span className="text-white text-3xl">🏦</span>
             </div>
-            <span className="text-xs font-semibold text-gray-600">Bank Transfer</span>
+            <span className="text-xs font-semibold text-gray-700">Bank Transfer</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-5">100% Advance Payment — Your money is safe &amp; secure</p>
+        <p className="text-xs text-gray-600 mt-5">100% Advance Payment — Your money is safe &amp; secure</p>
       </div>
     </section>
   );
@@ -594,12 +657,10 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-9 h-9 rounded-xl bg-[#2c1a0e] flex items-center justify-center">
-                <span className="text-white font-bold">A</span>
-              </div>
+              <img src="/profile.jpeg" alt="Ayesha Gul" className="w-10 h-10 rounded-xl object-cover" />
               <span className="text-lg font-bold text-[#2c1a0e]">Ayesha Gul</span>
             </div>
-            <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
+            <p className="text-sm text-gray-600 max-w-xs leading-relaxed">
               Premium women&apos;s clothing brand offering luxury 2-piece &amp; 3-piece suits. Quality, elegance, and affordability.
             </p>
           </div>
@@ -608,7 +669,7 @@ function Footer() {
             <ul className="space-y-2 text-sm">
               {["Home", "Collections", "About Us", "Contact"].map((l) => (
                 <li key={l}>
-                  <a href={`#${l.toLowerCase().replace(/\s/g, "")}`} className="text-gray-500 hover:text-[#2c1a0e] transition-colors">{l}</a>
+                  <a href={`#${l.toLowerCase().replace(/\s/g, "")}`} className="text-gray-600 hover:text-[#2c1a0e] transition-colors">{l}</a>
                 </li>
               ))}
             </ul>
@@ -618,13 +679,13 @@ function Footer() {
             <ul className="space-y-2 text-sm">
               {["2 Piece Suits", "3 Piece Suits"].map((c) => (
                 <li key={c}>
-                  <a href="#collections" className="text-gray-500 hover:text-[#2c1a0e] transition-colors">{c}</a>
+                  <a href="#collections" className="text-gray-600 hover:text-[#2c1a0e] transition-colors">{c}</a>
                 </li>
               ))}
             </ul>
           </div>
         </div>
-        <div className="border-t border-[#e8d5c4] pt-5 text-center text-xs text-gray-400">
+        <div className="border-t border-[#e8d5c4] pt-5 text-center text-xs text-gray-600">
           &copy; 2025 Ayesha Gul. All rights reserved.
         </div>
       </div>
@@ -648,14 +709,14 @@ function CartDrawer() {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between border-b border-[#e8d5c4] px-5 py-4">
             <h2 className="text-lg font-bold text-[#2c1a0e]">Your Cart</h2>
-            <button onClick={closeCart} className="p-2 rounded-lg text-gray-500 hover:bg-[#f5ede6]" aria-label="Close">
+            <button onClick={closeCart} className="p-2 rounded-lg text-gray-600 hover:bg-[#f5ede6]" aria-label="Close">
               <IconClose />
             </button>
           </div>
 
           <div className="flex-1 overflow-y-auto px-5 py-4">
             {items.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center text-gray-400 gap-3">
+              <div className="flex h-full flex-col items-center justify-center text-gray-600 gap-3">
                 <IconCart />
                 <p className="text-sm">Your cart is empty</p>
               </div>
@@ -674,9 +735,9 @@ function CartDrawer() {
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <p className="text-sm font-semibold text-[#2c1a0e] line-clamp-1">{item.name}</p>
-                          <p className="text-xs text-gray-400">{item.category}</p>
+                          <p className="text-xs text-gray-600">{item.category}</p>
                         </div>
-                        <button onClick={() => removeItem(item.productId)} className="text-gray-400 hover:text-red-500" aria-label="Remove">
+                        <button onClick={() => removeItem(item.productId)} className="text-gray-600 hover:text-red-500" aria-label="Remove">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
@@ -700,7 +761,7 @@ function CartDrawer() {
           {items.length > 0 && (
             <div className="border-t border-[#e8d5c4] px-5 py-4">
               <div className="mb-4 flex items-center justify-between">
-                <span className="text-sm text-gray-500">Total</span>
+                <span className="text-sm text-gray-600">Total</span>
                 <span className="text-lg font-bold text-[#2c1a0e]">Rs. {total.toLocaleString()}</span>
               </div>
               <button
@@ -729,9 +790,9 @@ function MobileBottomNav() {
           <span className="text-[10px] font-medium">Home</span>
         </a>
         <button onClick={openCart} className="flex flex-col items-center gap-1 text-white/70 hover:text-white transition-colors relative">
-          <IconCart />
+          <IconBag />
           {count > 0 && (
-            <span className="absolute -top-1 right-3 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[#2c1a0e] text-[9px] font-bold">
+            <span className="cart-badge absolute -top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[#2c1a0e] text-[9px] font-bold shadow">
               {count}
             </span>
           )}
@@ -765,6 +826,7 @@ export default function Home({ products }: { products: Product[] }) {
           activeCategory={activeCategory}
           setActiveCategory={setActiveCategory}
         />
+        <YouTubeChannels />
         <About />
         <Contact />
         <PaymentMethods />
